@@ -4,6 +4,7 @@ var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К
 var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
+var KEY_ESC = 27;
 
 var userDialog = document.querySelector('.setup');
 userDialog.classList.remove('hidden');
@@ -68,18 +69,23 @@ var addListWizard = function (ListElement) {
   ListElement.appendChild(fragment);
 };
 
+// Функция закрытия окна с настройками персонажа
+var pressingClickClose = function () {
+  userDialog.classList.add('hidden');
+  buttonClose.removeEventListener('click', pressingClickClose);
+};
 var buttonClose = document.querySelector('.setup-close');
 // Добавим событие на закрытие окна с настройкой персонажа
-buttonClose.addEventListener('click', function () {
-  userDialog.classList.add('hidden');
-});
+buttonClose.addEventListener('click', pressingClickClose);
 // Закрытие формы по нажатию ESC
-document.addEventListener('keydown', function (evt) {
+var pressingClickEsc = function (evt) {
   // Проверяем, что код клавиши равен 27 - ESC
-  if (evt.keyCode === 27) {
+  if (evt.keyCode === KEY_ESC) {
     userDialog.classList.add('hidden');
+    document.removeEventListener('keydown', pressingClickEsc);
   }
-});
+};
+document.addEventListener('keydown', pressingClickEsc);
 
 addListWizard(similarListElement);
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
