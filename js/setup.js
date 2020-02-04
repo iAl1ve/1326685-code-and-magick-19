@@ -80,7 +80,7 @@ var addListWizard = function (ListElement) {
 var onPopupEscPress = function (evt) {
   if (evt.target.className !== 'setup-user-name') {
     if (evt.keyCode === KEY_ESC) {
-          closeSetupDialog();
+      closeSetupDialog();
     }
   }
 };
@@ -99,7 +99,7 @@ var closeSetupDialog = function () {
 
 var onSubmitFormSetup = function () {
   setupForm.submit();
-}
+};
 
 var onChangeCoatColor = function () {
   var coatColor = setupForm.querySelector('input[name="coat-color"]').value;
@@ -109,7 +109,7 @@ var onChangeCoatColor = function () {
 
   setupPlayer.querySelector('.wizard-coat').style.fill = coatColor;
   setupForm.querySelector('input[name="coat-color"]').value = coatColor;
-}
+};
 
 var onChangeEyesColor = function () {
   var eyesColor = setupForm.querySelector('input[name="eyes-color"]').value;
@@ -119,7 +119,7 @@ var onChangeEyesColor = function () {
 
   setupPlayer.querySelector('.wizard-eyes').style.fill = eyesColor;
   setupForm.querySelector('input[name="eyes-color"]').value = eyesColor;
-}
+};
 
 var onChangeFireballColor = function () {
   var fireballColor = setupForm.querySelector('input[name="fireball-color"]').value;
@@ -129,7 +129,7 @@ var onChangeFireballColor = function () {
 
   setupPlayer.querySelector('.setup-fireball-wrap').style.background = fireballColor;
   setupForm.querySelector('input[name="fireball-color"]').value = fireballColor;
-}
+};
 
 // Обрабатываем события открытие окна с настройкой персонажа
 setupOpen.addEventListener('click', function () {
