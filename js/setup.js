@@ -86,20 +86,56 @@ var onPopupEscPress = function (evt) {
 };
 
 var openSetupDialog = function () {
-
   setupDialog.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-
+  setupPlayer.querySelector('.wizard-coat').addEventListener('click', onChangeCoatColor);
+  setupPlayer.querySelector('.wizard-eyes').addEventListener('click', onChangeEyesColor);
+  setupPlayer.querySelector('.setup-fireball').addEventListener('click', onChangeFireballColor);
+  setupClose.addEventListener('click', closeSetupDialog);
+  setupClose.addEventListener('keydown', onEnterPressClose);
+  setupSubmit.addEventListener('click', onSubmitFormSetup);
+  setupSubmit.addEventListener('keydown', onEnterSubmitFormSetup);
+  setupOpen.removeEventListener('click', openSetupDialog);
+  setupOpen.removeEventListener('keydown', onEnterPressOpen);
 };
 
 var closeSetupDialog = function () {
   setupDialog.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  setupClose.removeEventListener('click', closeSetupDialog);
+  setupClose.removeEventListener('keydown', onEnterPressClose);
+  setupPlayer.querySelector('.wizard-coat').removeEventListener('click', onChangeCoatColor);
+  setupPlayer.querySelector('.wizard-eyes').removeEventListener('click', onChangeEyesColor);
+  setupPlayer.querySelector('.setup-fireball').removeEventListener('click', onChangeFireballColor);
+  setupSubmit.removeEventListener('click', onSubmitFormSetup);
+  setupSubmit.removeEventListener('keydown', onEnterSubmitFormSetup);
+  setupOpen.addEventListener('click', openSetupDialog);
+  setupOpen.addEventListener('keydown', onEnterPressOpen);
 };
 
 var onSubmitFormSetup = function () {
   setupForm.submit();
+  setupSubmit.removeEventListener('click', onSubmitFormSetup);
+  setupSubmit.removeEventListener('keydown', onEnterSubmitFormSetup);
 };
+
+var onEnterSubmitFormSetup = function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    onSubmitFormSetup();
+  }
+};
+
+var onEnterPressOpen = function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    openSetupDialog();
+  }
+}
+
+var onEnterPressClose = function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    closeSetupDialog();
+  }
+}
 
 var onChangeCoatColor = function () {
   var coatColor = setupForm.querySelector('input[name="coat-color"]').value;
@@ -132,49 +168,9 @@ var onChangeFireballColor = function () {
 };
 
 // Обрабатываем события открытие окна с настройкой персонажа
-setupOpen.addEventListener('click', function () {
-  openSetupDialog();
-});
+setupOpen.addEventListener('click', openSetupDialog);
+setupOpen.addEventListener('keydown', onEnterPressOpen);
 
-setupOpen.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_ENTER) {
-    openSetupDialog();
-  }
-});
-
-// Обрабатываем события на закрытие окна с настройкой персонажа
-setupClose.addEventListener('click', function () {
-  closeSetupDialog();
-});
-
-setupClose.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_ENTER) {
-    closeSetupDialog();
-  }
-});
-
-// Обрабатываем события на отправку формы настройки персонажа
-setupSubmit.addEventListener('click', function () {
-  onSubmitFormSetup();
-});
-
-setupSubmit.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_ENTER) {
-    onSubmitFormSetup();
-  }
-});
-
-setupPlayer.querySelector('.wizard-coat').addEventListener('click', function () {
-  onChangeCoatColor();
-});
-
-setupPlayer.querySelector('.wizard-eyes').addEventListener('click', function () {
-  onChangeEyesColor();
-});
-
-setupPlayer.querySelector('.setup-fireball').addEventListener('click', function () {
-  onChangeFireballColor();
-});
 
 addListWizard(similarListElement);
 setupDialog.querySelector('.setup-similar').classList.remove('hidden');
