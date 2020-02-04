@@ -129,13 +129,13 @@ var onEnterPressOpen = function (evt) {
   if (evt.keyCode === KEY_ENTER) {
     openSetupDialog();
   }
-}
+};
 
 var onEnterPressClose = function (evt) {
   if (evt.keyCode === KEY_ENTER) {
     closeSetupDialog();
   }
-}
+};
 
 var onChangeCoatColor = function () {
   var coatColor = setupForm.querySelector('input[name="coat-color"]').value;
