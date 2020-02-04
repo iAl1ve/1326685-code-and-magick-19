@@ -4,12 +4,19 @@ var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К
 var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
+var WIZARD_FIREBALL_COLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var KEY_ESC = 27;
+var KEY_ENTER = 13;
 
-var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+var setupDialog = document.querySelector('.setup');
+var setupForm = document.querySelector('.setup-wizard-form');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+var setupSubmit = document.querySelector('.setup-submit');
+var setupPlayer = document.querySelector('.setup-player');
 
-var similarListElement = userDialog.querySelector('.setup-similar-list');
+
+var similarListElement = setupDialog.querySelector('.setup-similar-list');
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
@@ -69,23 +76,106 @@ var addListWizard = function (ListElement) {
   ListElement.appendChild(fragment);
 };
 
-// Функция закрытия окна с настройками персонажа
-var pressingClickClose = function () {
-  userDialog.classList.add('hidden');
-  buttonClose.removeEventListener('click', pressingClickClose);
-};
-var buttonClose = document.querySelector('.setup-close');
-// Добавим событие на закрытие окна с настройкой персонажа
-buttonClose.addEventListener('click', pressingClickClose);
 // Закрытие формы по нажатию ESC
-var pressingClickEsc = function (evt) {
-  // Проверяем, что код клавиши равен 27 - ESC
-  if (evt.keyCode === KEY_ESC) {
-    userDialog.classList.add('hidden');
-    document.removeEventListener('keydown', pressingClickEsc);
+var onPopupEscPress = function (evt) {
+  if (evt.target.className !== 'setup-user-name') {
+    if (evt.keyCode === KEY_ESC) {
+          closeSetupDialog();
+    }
   }
 };
-document.addEventListener('keydown', pressingClickEsc);
+
+var openSetupDialog = function () {
+
+  setupDialog.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+
+};
+
+var closeSetupDialog = function () {
+  setupDialog.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+var onSubmitFormSetup = function () {
+  setupForm.submit();
+}
+
+var onChangeCoatColor = function () {
+  var coatColor = setupForm.querySelector('input[name="coat-color"]').value;
+  var coatColorIndex = WIZARD_COAT_COLOR.indexOf(coatColor);
+
+  coatColor = coatColorIndex === WIZARD_COAT_COLOR.length - 1 ? WIZARD_COAT_COLOR[0] : WIZARD_COAT_COLOR[coatColorIndex + 1];
+
+  setupPlayer.querySelector('.wizard-coat').style.fill = coatColor;
+  setupForm.querySelector('input[name="coat-color"]').value = coatColor;
+}
+
+var onChangeEyesColor = function () {
+  var eyesColor = setupForm.querySelector('input[name="eyes-color"]').value;
+  var eyesColorIndex = WIZARD_EYES_COLOR.indexOf(eyesColor);
+
+  eyesColor = eyesColorIndex === WIZARD_EYES_COLOR.length - 1 ? WIZARD_EYES_COLOR[0] : WIZARD_EYES_COLOR[eyesColorIndex + 1];
+
+  setupPlayer.querySelector('.wizard-eyes').style.fill = eyesColor;
+  setupForm.querySelector('input[name="eyes-color"]').value = eyesColor;
+}
+
+var onChangeFireballColor = function () {
+  var fireballColor = setupForm.querySelector('input[name="fireball-color"]').value;
+  var fireballColorIndex = WIZARD_FIREBALL_COLOR.indexOf(fireballColor);
+
+  fireballColor = fireballColorIndex === WIZARD_FIREBALL_COLOR.length - 1 ? WIZARD_FIREBALL_COLOR[0] : WIZARD_FIREBALL_COLOR[fireballColorIndex + 1];
+
+  setupPlayer.querySelector('.setup-fireball-wrap').style.background = fireballColor;
+  setupForm.querySelector('input[name="fireball-color"]').value = fireballColor;
+}
+
+// Обрабатываем события открытие окна с настройкой персонажа
+setupOpen.addEventListener('click', function () {
+  openSetupDialog();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    openSetupDialog();
+  }
+});
+
+// Обрабатываем события на закрытие окна с настройкой персонажа
+setupClose.addEventListener('click', function () {
+  closeSetupDialog();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    closeSetupDialog();
+  }
+});
+
+// Обрабатываем события на отправку формы настройки персонажа
+setupSubmit.addEventListener('click', function () {
+  onSubmitFormSetup();
+});
+
+setupSubmit.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    onSubmitFormSetup();
+  }
+});
+
+setupPlayer.querySelector('.wizard-coat').addEventListener('click', function () {
+  onChangeCoatColor();
+});
+
+setupPlayer.querySelector('.wizard-eyes').addEventListener('click', function () {
+  onChangeEyesColor();
+});
+
+setupPlayer.querySelector('.setup-fireball').addEventListener('click', function () {
+  onChangeFireballColor();
+});
 
 addListWizard(similarListElement);
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+setupDialog.querySelector('.setup-similar').classList.remove('hidden');
+
