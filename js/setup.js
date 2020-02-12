@@ -58,9 +58,9 @@
     setupDialogElement.style.top = startSetupDialogPosition.y;
   };
 
-  var onSuccessLoad = function (evt) {
+  var onSuccessLoad = function () {
     closeSetupDialog();
-  }
+  };
 
   var onSubmitFormSetup = function (evt) {
     window.backend.save(new FormData(setupForm), onSuccessLoad, window.render.error);
