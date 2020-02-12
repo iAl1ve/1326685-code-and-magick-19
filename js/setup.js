@@ -20,13 +20,14 @@
   };
 
   var openSetupDialog = function () {
-    setupDialog.classList.remove('hidden');
+    window.backend.load(window.render.success, window.render.error);
     document.addEventListener('keydown', onPopupEscPress);
     setupPlayer.querySelector('.wizard-coat').addEventListener('click', window.colorize.changeCoat);
     setupPlayer.querySelector('.wizard-eyes').addEventListener('click', window.colorize.changeEyes);
     setupPlayer.querySelector('.setup-fireball').addEventListener('click', window.colorize.changeFireball);
     setupClose.addEventListener('click', closeSetupDialog);
     setupClose.addEventListener('keydown', onEnterPressClose);
+    setupForm.addEventListener('submit', onSubmitFormSetup);
     setupSubmit.addEventListener('click', onSubmitFormSetup);
     setupSubmit.addEventListener('keydown', onEnterSubmitFormSetup);
     setupOpen.removeEventListener('click', openSetupDialog);
@@ -35,6 +36,7 @@
     setupDialog.querySelector('.setup-similar').classList.remove('hidden');
     startSetupDialogPosition.x = setupDialogElement.style.left;
     startSetupDialogPosition.y = setupDialogElement.style.top;
+    setupDialog.classList.remove('hidden');
   };
 
   var closeSetupDialog = function () {
@@ -45,6 +47,7 @@
     setupPlayer.querySelector('.wizard-coat').removeEventListener('click', window.colorize.changeCoat);
     setupPlayer.querySelector('.wizard-eyes').removeEventListener('click', window.colorize.changeEyes);
     setupPlayer.querySelector('.setup-fireball').removeEventListener('click', window.colorize.changeFireball);
+    setupForm.removeEventListener('submit', onSubmitFormSetup);
     setupSubmit.removeEventListener('click', onSubmitFormSetup);
     setupSubmit.removeEventListener('keydown', onEnterSubmitFormSetup);
     dialogHandler.removeEventListener('mousedown', window.dialog.move);
@@ -55,8 +58,13 @@
     setupDialogElement.style.top = startSetupDialogPosition.y;
   };
 
-  var onSubmitFormSetup = function () {
-    setupForm.submit();
+  var onSuccessLoad = function (evt) {
+    closeSetupDialog();
+  }
+
+  var onSubmitFormSetup = function (evt) {
+    window.backend.save(new FormData(setupForm), onSuccessLoad, window.render.error);
+    evt.preventDefault();
     setupSubmit.removeEventListener('click', onSubmitFormSetup);
     setupSubmit.removeEventListener('keydown', onEnterSubmitFormSetup);
   };
