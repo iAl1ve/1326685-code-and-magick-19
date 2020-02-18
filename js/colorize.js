@@ -16,6 +16,7 @@ window.colorize = function () {
 
     setupPlayer.querySelector('.wizard-coat').style.fill = coatColor;
     setupForm.querySelector('input[name="coat-color"]').value = coatColor;
+    window.render.coat(coatColor);
   };
 
   var changeEyesColor = function () {
@@ -26,6 +27,7 @@ window.colorize = function () {
 
     setupPlayer.querySelector('.wizard-eyes').style.fill = eyesColor;
     setupForm.querySelector('input[name="eyes-color"]').value = eyesColor;
+    window.render.eyes(eyesColor);
   };
 
   var changeFireballColor = function () {
@@ -43,6 +45,6 @@ window.colorize = function () {
     eyes: WIZARD_EYES_COLOR,
     changeCoat: changeCoatColor,
     changeEyes: changeEyesColor,
-    changeFireball: changeFireballColor
+    changeFireball: changeFireballColor,
   };
 }();
