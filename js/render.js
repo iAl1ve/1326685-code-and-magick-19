@@ -1,9 +1,13 @@
 'use strict';
 
-window.render = function () {
+(function () {
   var MAX_COUNT_SIMILAR_WIZARDS = 4;
+  var allWizards = [];
+  var coatColor;
+  var eyesColor;
 
   var setupDialog = document.querySelector('.setup');
+  var setupForm = document.querySelector('.setup-wizard-form');
   var similarListElement = setupDialog.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
       .content
@@ -19,13 +23,64 @@ window.render = function () {
     return wizardElement;
   };
 
-  var onSuccessLoad = function (wizards) {
-    var fragment = document.createDocumentFragment();
+  var getRank = function (wizard) {
+    var rank = 0;
 
-    for (var i = 0; i < MAX_COUNT_SIMILAR_WIZARDS; i++) {
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+
+    return rank;
+  };
+
+  var namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var onShowWizards = function (wizards) {
+    var fragment = document.createDocumentFragment();
+    var count = wizards.length > MAX_COUNT_SIMILAR_WIZARDS ? MAX_COUNT_SIMILAR_WIZARDS : wizards.length;
+    similarListElement.innerHTML = '';
+    for (var i = 0; i < count; i++) {
       fragment.appendChild(renderWizard(wizards[i]));
     }
     similarListElement.appendChild(fragment);
+  };
+
+  var updateWizards = function () {
+    onShowWizards(allWizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  var onEyesChange = window.debounce(function (color) {
+    eyesColor = color;
+    coatColor = setupForm.querySelector('input[name="coat-color"]').value;
+    updateWizards();
+  });
+
+  var onCoatChange = window.debounce(function (color) {
+    coatColor = color;
+    eyesColor = setupForm.querySelector('input[name="eyes-color"]').value;
+    updateWizards();
+  });
+
+  var onSuccessLoad = function (wizards) {
+    allWizards = wizards;
+    updateWizards();
   };
 
   var onErrorLoad = function (errorMessage) {
@@ -41,8 +96,11 @@ window.render = function () {
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  return {
+
+  window.render = {
     success: onSuccessLoad,
-    error: onErrorLoad
+    error: onErrorLoad,
+    eyes: onEyesChange,
+    coat: onCoatChange,
   };
-}();
+}());
