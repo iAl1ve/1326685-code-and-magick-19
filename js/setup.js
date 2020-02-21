@@ -9,6 +9,7 @@
   var setupPlayer = document.querySelector('.setup-player');
   var setupDialogElement = document.querySelector('.setup');
   var dialogHandler = setupDialogElement.querySelector('.upload');
+  var fileInput = document.querySelector('.upload input[type=file]');
   var startSetupDialogPosition = {
     x: 0,
     y: 0
@@ -33,6 +34,7 @@
     setupOpen.removeEventListener('click', openSetupDialog);
     setupOpen.removeEventListener('keydown', onEnterPressOpen);
     dialogHandler.addEventListener('mousedown', window.dialog.move);
+    fileInput.addEventListener('change', window.avatar.change);
     setupDialog.querySelector('.setup-similar').classList.remove('hidden');
     startSetupDialogPosition.x = setupDialogElement.style.left;
     startSetupDialogPosition.y = setupDialogElement.style.top;
@@ -51,6 +53,7 @@
     setupSubmit.removeEventListener('click', onSubmitFormSetup);
     setupSubmit.removeEventListener('keydown', onEnterSubmitFormSetup);
     dialogHandler.removeEventListener('mousedown', window.dialog.move);
+    fileInput.removeEventListener('change', window.avatar.change);
     setupOpen.addEventListener('click', openSetupDialog);
     setupOpen.addEventListener('keydown', onEnterPressOpen);
     setupDialog.querySelector('.setup-similar').classList.add('hidden');
